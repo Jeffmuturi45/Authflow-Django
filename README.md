@@ -55,7 +55,7 @@ It implements **email-based authentication**, **OTP verification with auto-submi
 
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/yourusername/authflow.git
+git clone https://github.com/Jeffmuturi45/Authflow-Django.git
 cd authflow
 
 
@@ -192,7 +192,7 @@ Open a Pull Request
 
 📄 License
 
-This project is licensed under the MIT License — see the LICENSE
+This project is licensed under the MIT License — see the **https://github.com/Jeffmuturi45/Authflow-Django.git/License**
  file.
 
 ⭐ Acknowledgments
