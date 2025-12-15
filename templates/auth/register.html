@@ -1,0 +1,293 @@
+<!-- templates/auth/register.html -->
+{% extends 'auth/base_auth.html' %}
+{% load static %}
+
+{% block title %}Create Account - AuthFlow{% endblock %}
+
+{% block form_title %}Create Your Account{% endblock %}
+{% block form_subtitle %}Join thousands of users who trust our secure authentication system{% endblock %}
+
+{% block form_content %}
+<form method="POST" action="{% url 'register' %}" class="space-y-6" id="registerForm">
+    {% csrf_token %}
+    
+    <!-- Email Field -->
+    <div>
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-envelope mr-2 text-primary-500"></i>Email Address
+        </label>
+        <div class="relative">
+            <input 
+                type="email" 
+                name="email" 
+                id="email" 
+                required
+                placeholder="you@example.com"
+                class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                autocomplete="email"
+            >
+            <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <i class="fas fa-envelope"></i>
+            </div>
+        </div>
+        <p class="mt-1 text-xs text-gray-500">We'll send a verification code to this email</p>
+    </div>
+
+    <!-- Password Field -->
+    <div>
+        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-lock mr-2 text-primary-500"></i>Password
+        </label>
+        <div class="relative">
+            <input 
+                type="password" 
+                name="password" 
+                id="password" 
+                required
+                placeholder="••••••••"
+                class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                autocomplete="new-password"
+            >
+            <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <i class="fas fa-lock"></i>
+            </div>
+            <button 
+                type="button" 
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                onclick="togglePassword('password')"
+            >
+                <i class="fas fa-eye" id="passwordEye"></i>
+            </button>
+        </div>
+        <div id="passwordRequirements" class="mt-2 space-y-1">
+            <p class="text-xs text-gray-600">Password must contain:</p>
+            <ul class="text-xs space-y-1">
+                <li class="flex items-center" id="reqLength">
+                    <i class="fas fa-circle text-gray-300 mr-2 text-xs"></i>
+                    <span>At least 8 characters</span>
+                </li>
+                <li class="flex items-center" id="reqUppercase">
+                    <i class="fas fa-circle text-gray-300 mr-2 text-xs"></i>
+                    <span>One uppercase letter</span>
+                </li>
+                <li class="flex items-center" id="reqLowercase">
+                    <i class="fas fa-circle text-gray-300 mr-2 text-xs"></i>
+                    <span>One lowercase letter</span>
+                </li>
+                <li class="flex items-center" id="reqNumber">
+                    <i class="fas fa-circle text-gray-300 mr-2 text-xs"></i>
+                    <span>One number</span>
+                </li>
+                <li class="flex items-center" id="reqSpecial">
+                    <i class="fas fa-circle text-gray-300 mr-2 text-xs"></i>
+                    <span>One special character</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Confirm Password Field -->
+    <div>
+        <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-lock mr-2 text-primary-500"></i>Confirm Password
+        </label>
+        <div class="relative">
+            <input 
+                type="password" 
+                name="confirm_password" 
+                id="confirm_password" 
+                required
+                placeholder="••••••••"
+                class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                autocomplete="new-password"
+            >
+            <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <i class="fas fa-lock"></i>
+            </div>
+            <button 
+                type="button" 
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                onclick="togglePassword('confirm_password')"
+            >
+                <i class="fas fa-eye" id="confirmPasswordEye"></i>
+            </button>
+        </div>
+        <div id="passwordMatch" class="mt-2 hidden">
+            <p class="text-xs text-green-600">
+                <i class="fas fa-check-circle mr-1"></i>Passwords match
+            </p>
+        </div>
+        <div id="passwordMismatch" class="mt-2 hidden">
+            <p class="text-xs text-red-600">
+                <i class="fas fa-times-circle mr-1"></i>Passwords don't match
+            </p>
+        </div>
+    </div>
+
+    <!-- Terms and Conditions -->
+    <div class="flex items-start">
+        <div class="flex items-center h-5">
+            <input 
+                id="terms" 
+                name="terms" 
+                type="checkbox" 
+                required
+                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+            >
+        </div>
+        <div class="ml-3">
+            <label for="terms" class="text-sm text-gray-700">
+                I agree to the 
+                <a href="#" class="text-primary-600 hover:text-primary-500 font-medium">Terms of Service</a> 
+                and 
+                <a href="#" class="text-primary-600 hover:text-primary-500 font-medium">Privacy Policy</a>
+            </label>
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button 
+        type="submit"
+        id="submitBtn"
+        class="w-full bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold py-3 px-4 rounded-lg hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow"
+    >
+        <span id="buttonText">Create Account</span>
+        <span id="buttonSpinner" class="hidden">
+            <i class="fas fa-spinner fa-spin mr-2"></i>Creating account...
+        </span>
+    </button>
+
+    <!-- Divider -->
+    <div class="relative">
+        <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">Or continue with</span>
+        </div>
+    </div>
+
+    <!-- Social Login (optional) -->
+    <div class="grid grid-cols-2 gap-3">
+        <button type="button" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+            <i class="fab fa-google text-red-500 mr-2"></i>
+            <span>Google</span>
+        </button>
+        <button type="button" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+            <i class="fab fa-github text-gray-800 mr-2"></i>
+            <span>GitHub</span>
+        </button>
+    </div>
+</form>
+{% endblock %}
+
+{% block bottom_links %}
+<p class="text-gray-600">
+    Already have an account? 
+    <a href="{% url 'login' %}" class="font-medium text-primary-600 hover:text-primary-500 transition-colors duration-200">
+        Sign in here
+    </a>
+</p>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Password visibility toggle
+    function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        const eyeIcon = document.getElementById(fieldId === 'password' ? 'passwordEye' : 'confirmPasswordEye');
+        
+        if (field.type === 'password') {
+            field.type = 'text';
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            field.type = 'password';
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        }
+    }
+
+    // Password validation
+    const passwordField = document.getElementById('password');
+    const confirmField = document.getElementById('confirm_password');
+    const submitBtn = document.getElementById('submitBtn');
+    const buttonText = document.getElementById('buttonText');
+    const buttonSpinner = document.getElementById('buttonSpinner');
+
+    function validatePassword(password) {
+        const requirements = {
+            length: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /\d/.test(password),
+            special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+        };
+
+        // Update requirement indicators
+        document.getElementById('reqLength').querySelector('i').className = 
+            `fas fa-circle ${requirements.length ? 'text-success-500' : 'text-danger-500'} mr-2 text-xs`;
+        document.getElementById('reqUppercase').querySelector('i').className = 
+            `fas fa-circle ${requirements.uppercase ? 'text-success-500' : 'text-danger-500'} mr-2 text-xs`;
+        document.getElementById('reqLowercase').querySelector('i').className = 
+            `fas fa-circle ${requirements.lowercase ? 'text-success-500' : 'text-danger-500'} mr-2 text-xs`;
+        document.getElementById('reqNumber').querySelector('i').className = 
+            `fas fa-circle ${requirements.number ? 'text-success-500' : 'text-danger-500'} mr-2 text-xs`;
+        document.getElementById('reqSpecial').querySelector('i').className = 
+            `fas fa-circle ${requirements.special ? 'text-success-500' : 'text-danger-500'} mr-2 text-xs`;
+
+        return Object.values(requirements).every(req => req);
+    }
+
+    function checkPasswordMatch() {
+        const password = passwordField.value;
+        const confirm = confirmField.value;
+        
+        const matchDiv = document.getElementById('passwordMatch');
+        const mismatchDiv = document.getElementById('passwordMismatch');
+        
+        if (confirm === '') {
+            matchDiv.classList.add('hidden');
+            mismatchDiv.classList.add('hidden');
+            return false;
+        }
+        
+        if (password === confirm && password !== '') {
+            matchDiv.classList.remove('hidden');
+            mismatchDiv.classList.add('hidden');
+            return true;
+        } else {
+            matchDiv.classList.add('hidden');
+            mismatchDiv.classList.remove('hidden');
+            return false;
+        }
+    }
+
+    function validateForm() {
+        const passwordValid = validatePassword(passwordField.value);
+        const passwordsMatch = checkPasswordMatch();
+        const termsChecked = document.getElementById('terms').checked;
+        const emailValid = document.getElementById('email').checkValidity();
+        
+        submitBtn.disabled = !(passwordValid && passwordsMatch && termsChecked && emailValid);
+    }
+
+    // Event listeners
+    passwordField.addEventListener('input', validateForm);
+    confirmField.addEventListener('input', validateForm);
+    document.getElementById('terms').addEventListener('change', validateForm);
+    document.getElementById('email').addEventListener('input', validateForm);
+
+    // Form submission
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        if (!submitBtn.disabled) {
+            buttonText.classList.add('hidden');
+            buttonSpinner.classList.remove('hidden');
+            submitBtn.disabled = true;
+        }
+    });
+
+    // Initialize validation
+    validateForm();
+</script>
+{% endblock %}

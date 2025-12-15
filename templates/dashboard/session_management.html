@@ -1,0 +1,217 @@
+<!-- templates/dashboard/session_management.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Session Management - AuthFlow{% endblock %}
+
+{% block content %}
+<div class="flex min-h-screen bg-gray-50">
+    <!-- Sidebar -->
+    <div class="hidden md:flex md:w-64 md:flex-col">
+        <div class="flex flex-col flex-grow pt-5 overflow-y-auto bg-white border-r border-gray-200">
+            <!-- Logo -->
+            <div class="flex items-center flex-shrink-0 px-6 mb-8">
+                <div class="bg-primary-600 p-2 rounded-xl mr-3">
+                    <i class="fas fa-shield-alt text-white text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold text-gray-800">AuthFlow</span>
+            </div>
+
+            <!-- User Profile -->
+            <div class="px-6 mb-8">
+                <div class="flex items-center">
+                    {% if user.avatar %}
+                    <img class="w-12 h-12 rounded-full border-2 border-primary-100" src="{{ user.avatar.url }}" alt="{{ user.get_full_name }}">
+                    {% else %}
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary-500 to-purple-500 flex items-center justify-center text-white font-semibold">
+                        {{ user.email|first|upper }}
+                    </div>
+                    {% endif %}
+                    <div class="ml-3">
+                        <p class="text-sm font-semibold text-gray-800">{{ user.get_full_name|default:user.email }}</p>
+                        <p class="text-xs text-gray-500">
+                            {% if user.email_verified %}
+                            <span class="inline-flex items-center text-green-600">
+                                <i class="fas fa-check-circle mr-1"></i> Verified
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center text-yellow-600">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Unverified
+                            </span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex-grow px-4">
+                <nav class="space-y-1">
+                    <a href="{% url 'dashboard' %}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="{% url 'profile' %}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-user mr-3"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="{% url 'security' %}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-shield-alt mr-3"></i>
+                        <span>Security</span>
+                    </a>
+                    <a href="{% url 'settings' %}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-cog mr-3"></i>
+                        <span>Settings</span>
+                    </a>
+                    <div class="pt-6 mt-6 border-t border-gray-200">
+                        <a href="{% url 'logout' %}" class="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-sign-out-alt mr-3"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex flex-col flex-1 md:ml-64">
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="px-4 py-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-semibold text-gray-900">Session Management</h1>
+                        <p class="text-sm text-gray-600 mt-1">Manage your active login sessions</p>
+                    </div>
+                    <a href="{% url 'security' %}" class="text-sm text-primary-600 hover:text-primary-700">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to Security
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 p-4 md:p-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Current Session -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Current Session</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="bg-green-100 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-laptop text-green-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-gray-900">This Device</h3>
+                                    <p class="text-sm text-gray-600">
+                                        <span class="font-medium">IP:</span> {{ request.META.REMOTE_ADDR }}<br>
+                                        <span class="font-medium">Browser:</span> {{ request.META.HTTP_USER_AGENT|truncatechars:50 }}<br>
+                                        <span class="font-medium">Last Activity:</span> Just now
+                                    </p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Active</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Active Sessions -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-lg font-semibold text-gray-900">Other Active Sessions</h2>
+                        <button class="text-sm text-red-600 hover:text-red-700 font-medium" onclick="revokeAllSessions()">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Logout All Other Devices
+                        </button>
+                    </div>
+                    
+                    {% if user_sessions %}
+                    <div class="space-y-4">
+                        {% for session in user_sessions %}
+                        {% if not session.is_current %}
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="bg-gray-100 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-mobile-alt text-gray-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-gray-900">Mobile Device</h3>
+                                    <p class="text-sm text-gray-600">
+                                        <span class="font-medium">Last Active:</span> {{ session.expire_date|date:"M d, Y H:i" }}<br>
+                                        <span class="font-medium">Session ID:</span> {{ session.session_key|slice:":10" }}...
+                                    </p>
+                                </div>
+                            </div>
+                            <form method="POST" action="{% url 'session_management' %}" class="inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="session_key" value="{{ session.session_key }}">
+                                <button type="submit" class="px-4 py-2 border border-red-300 text-red-700 text-sm font-medium rounded-lg hover:bg-red-50 transition-colors duration-200">
+                                    Revoke
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-8">
+                        <div class="bg-gray-50 p-6 rounded-lg inline-block">
+                            <i class="fas fa-check-circle text-green-500 text-4xl mb-4"></i>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">No Other Active Sessions</h3>
+                            <p class="text-gray-600">You're only logged in on this device.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Session Information -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Session Information</h2>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h3 class="font-medium text-gray-900 mb-2">Session Expiry</h3>
+                                <p class="text-sm text-gray-600">
+                                    Your current session will expire in 
+                                    <span class="font-medium text-primary-600">2 weeks</span> 
+                                    unless you logout manually.
+                                </p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h3 class="font-medium text-gray-900 mb-2">Remember Me</h3>
+                                <p class="text-sm text-gray-600">
+                                    When you check "Remember me" during login, your session lasts for 2 weeks instead of browser session.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                            <h3 class="font-medium text-blue-900 mb-2">Security Tip</h3>
+                            <p class="text-sm text-blue-700">
+                                Always logout from shared or public computers. 
+                                If you notice any suspicious sessions, revoke them immediately and change your password.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function revokeAllSessions() {
+        if (confirm('Are you sure you want to logout from all other devices? You will remain logged in on this device.')) {
+            // This would typically make an AJAX request to revoke all sessions
+            alert('This feature is coming soon! For now, you can revoke individual sessions.');
+        }
+    }
+    
+    // Auto-refresh session list every 30 seconds
+    setInterval(() => {
+        console.log('Refreshing session list...');
+        // In a real app, you would fetch updated session data here
+    }, 30000);
+</script>
+{% endblock %}

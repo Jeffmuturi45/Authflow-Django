@@ -1,0 +1,99 @@
+<!-- templates/auth/base_auth.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col md:flex-row">
+    <!-- Left side - Branding/Graphics -->
+    <div class="hidden md:flex md:w-1/2 bg-gradient-to-br from-primary-600 via-purple-600 to-pink-600 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div class="relative z-10 flex flex-col justify-center p-12 text-white">
+            <div class="max-w-md">
+                <div class="flex items-center mb-8">
+                    <div class="bg-white p-3 rounded-2xl mr-4">
+                        <i class="fas fa-shield-alt text-primary-600 text-3xl"></i>
+                    </div>
+                    <h1 class="text-4xl font-bold">AuthFlow</h1>
+                </div>
+                <h2 class="text-3xl font-bold mb-4">Secure, Modern Authentication</h2>
+                <p class="text-primary-100 mb-6 text-lg">
+                    Experience the future of authentication with our secure, user-friendly system.
+                    Built with Django and TailwindCSS.
+                </p>
+                <ul class="space-y-3">
+                    <li class="flex items-center">
+                        <i class="fas fa-check-circle mr-3 text-green-300"></i>
+                        <span>Email-based authentication (no username)</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check-circle mr-3 text-green-300"></i>
+                        <span>One-Time Password (OTP) verification</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check-circle mr-3 text-green-300"></i>
+                        <span>Rate limiting & security features</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check-circle mr-3 text-green-300"></i>
+                        <span>Modern dashboard with analytics</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Animated background elements -->
+        <div class="absolute top-0 left-0 w-64 h-64 bg-white rounded-full opacity-10 -translate-x-32 -translate-y-32"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full opacity-10 translate-x-48 translate-y-48"></div>
+    </div>
+
+    <!-- Right side - Authentication Form -->
+    <div class="w-full md:w-1/2 flex items-center justify-center p-4 md:p-8">
+        <div class="w-full max-w-md animate-fade-in">
+            <!-- Mobile header -->
+            <div class="md:hidden flex items-center justify-center mb-8">
+                <div class="bg-primary-600 p-3 rounded-2xl mr-4">
+                    <i class="fas fa-shield-alt text-white text-2xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800">AuthFlow</h1>
+            </div>
+
+            <!-- Form container -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-10 border border-gray-100">
+                <!-- Back link (if applicable) -->
+                {% block back_link %}{% endblock %}
+                
+                <!-- Form header -->
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                        {% block form_title %}{% endblock %}
+                    </h2>
+                    <p class="text-gray-600">
+                        {% block form_subtitle %}{% endblock %}
+                    </p>
+                </div>
+
+                <!-- Form content -->
+                {% block form_content %}{% endblock %}
+
+                <!-- Form footer -->
+                {% block form_footer %}{% endblock %}
+            </div>
+
+            <!-- Bottom links -->
+            <div class="mt-6 text-center text-gray-600">
+                {% block bottom_links %}{% endblock %}
+            </div>
+
+            <!-- Demo credentials (only in development) -->
+            {% if debug %}
+            <div class="mt-8 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                <h3 class="font-medium text-yellow-800 mb-2">
+                    <i class="fas fa-flask mr-2"></i>Demo Credentials
+                </h3>
+                <p class="text-sm text-yellow-700">
+                    This is a demo system. Use test@example.com with password "Test123!".
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,132 @@
+<!-- templates/emails/welcome_email.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to AuthFlow!</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #374151;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 12px 12px 0 0;
+            color: white;
+        }
+        .content {
+            background: white;
+            padding: 40px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .feature {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        .feature-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            color: #3b82f6;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 style="margin: 0; font-size: 32px;">🎉 Welcome to AuthFlow!</h1>
+            <p style="margin: 10px 0 0; opacity: 0.9;">Your account is now verified and ready to use</p>
+        </div>
+        
+        <div class="content">
+            <p>Hello {% if user.first_name %}{{ user.first_name }}{% else %}there{% endif %},</p>
+            
+            <p>Congratulations! Your AuthFlow account has been successfully verified. You now have access to our secure authentication system and all its features.</p>
+            
+            <h3>🚀 Get Started</h3>
+            <p>Here are some things you can do now:</p>
+            
+            <div class="feature">
+                <div class="feature-icon">🔐</div>
+                <div>
+                    <strong>Secure Your Account</strong>
+                    <p>Explore security settings and enable additional protection</p>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <div>
+                    <strong>View Your Dashboard</strong>
+                    <p>Check your account activity and statistics</p>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">⚙️</div>
+                <div>
+                    <strong>Customize Settings</strong>
+                    <p>Personalize your account preferences</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{ site_url }}/accounts/dashboard/" class="button">Go to Dashboard</a>
+            </div>
+            
+            <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                <p style="margin: 0;"><strong>💡 Pro Tip:</strong> Keep your account secure by:</p>
+                <ul style="margin: 10px 0 0;">
+                    <li>Using a strong, unique password</li>
+                    <li>Enabling two-factor authentication when available</li>
+                    <li>Regularly reviewing your login activity</li>
+                </ul>
+            </div>
+            
+            <p style="margin-top: 30px;">Need help? Check out our <a href="{{ site_url }}/help/" style="color: #3b82f6;">help center</a> or <a href="mailto:support@authflow.com" style="color: #3b82f6;">contact support</a>.</p>
+            
+            <div class="footer">
+                <p>© {% now "Y" %} AuthFlow. All rights reserved.</p>
+                <p>This is an automated message, please do not reply to this email.</p>
+                <p style="font-size: 12px; color: #9ca3af;">
+                    <a href="{{ site_url }}/privacy/" style="color: #9ca3af;">Privacy Policy</a> | 
+                    <a href="{{ site_url }}/terms/" style="color: #9ca3af;">Terms of Service</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

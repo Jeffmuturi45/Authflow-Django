@@ -1,0 +1,27 @@
+# authflow/requirements.txt
+
+# Django Framework
+Django==4.2.0
+
+# Database (SQLite for dev, MySQL for production)
+mysqlclient==2.2.0
+
+# Email testing
+django-mailer==4.0.0
+
+# Rate limiting
+django-ratelimit==4.0.0
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Password validation
+django-password-validators==1.5.0
+
+# For production (optional)
+gunicorn==20.1.0
+whitenoise==6.5.0
+
+# Development tools
+black==23.3.0
+django-debug-toolbar==4.0.0

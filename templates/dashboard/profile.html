@@ -1,0 +1,367 @@
+<!-- templates/dashboard/profile.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile - AuthFlow{% endblock %}
+
+{% block content %}
+<div class="flex min-h-screen bg-gray-50">
+    <!-- Sidebar (same as dashboard) -->
+    <div class="hidden md:flex md:w-64 md:flex-col">
+        <div class="flex flex-col flex-grow pt-5 overflow-y-auto bg-white border-r border-gray-200">
+            <!-- Logo -->
+            <div class="flex items-center flex-shrink-0 px-6 mb-8">
+                <div class="bg-primary-600 p-2 rounded-xl mr-3">
+                    <i class="fas fa-shield-alt text-white text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold text-gray-800">AuthFlow</span>
+            </div>
+
+            <!-- User Profile -->
+            <div class="px-6 mb-8">
+                <div class="flex items-center">
+                    {% if user.avatar %}
+                    <img class="w-12 h-12 rounded-full border-2 border-primary-100" src="{{ user.avatar.url }}" alt="{{ user.get_full_name }}">
+                    {% else %}
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary-500 to-purple-500 flex items-center justify-center text-white font-semibold">
+                        {{ user.email|first|upper }}
+                    </div>
+                    {% endif %}
+                    <div class="ml-3">
+                        <p class="text-sm font-semibold text-gray-800">
+                            {{ user.get_full_name|default:user.email }}
+                        </p>
+                        <p class="text-xs text-gray-500">
+                            {% if user.email_verified %}
+                            <span class="inline-flex items-center text-green-600">
+                                <i class="fas fa-check-circle mr-1"></i> Verified
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center text-yellow-600">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Unverified
+                            </span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex-grow px-4">
+                <nav class="space-y-1">
+                    <a href="{% url 'dashboard' %}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="{% url 'profile' %}" class="flex items-center px-4 py-3 bg-primary-50 text-primary-600 border-l-4 border-primary-500 rounded-lg">
+                        <i class="fas fa-user mr-3"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="{% url 'security' %}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-shield-alt mr-3"></i>
+                        <span>Security</span>
+                    </a>
+                    <a href="{% url 'settings' %}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-cog mr-3"></i>
+                        <span>Settings</span>
+                    </a>
+                    <div class="pt-6 mt-6 border-t border-gray-200">
+                        <a href="{% url 'logout' %}" class="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-sign-out-alt mr-3"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex flex-col flex-1 md:ml-64">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="px-4 py-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-semibold text-gray-900">Profile Settings</h1>
+                        <p class="text-sm text-gray-600 mt-1">Manage your personal information</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="{% url 'dashboard' %}" class="hidden md:inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 p-4 md:p-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Profile Update Form -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Personal Information</h2>
+                    
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="update_profile" value="true">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <!-- Avatar -->
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-3">Profile Picture</label>
+                                <div class="flex items-center space-x-6">
+                                    <div class="flex-shrink-0">
+                                        {% if user.avatar %}
+                                        <img id="avatarPreview" class="w-24 h-24 rounded-full border-2 border-primary-100 object-cover" src="{{ user.avatar.url }}" alt="Profile picture">
+                                        {% else %}
+                                        <div id="avatarPreview" class="w-24 h-24 rounded-full bg-gradient-to-r from-primary-500 to-purple-500 flex items-center justify-center text-white text-3xl font-semibold border-2 border-primary-100">
+                                            {{ user.email|first|upper }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <input type="file" name="avatar" id="avatarInput" accept="image/*" class="hidden" onchange="previewAvatar(event)">
+                                        <button type="button" onclick="document.getElementById('avatarInput').click()" class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                            Change Photo
+                                        </button>
+                                        <p class="mt-2 text-xs text-gray-500">
+                                            JPG, PNG or GIF. Max size 2MB.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- First Name -->
+                            <div>
+                                <label for="id_first_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                    First Name
+                                </label>
+                                {{ profile_form.first_name }}
+                                {% if profile_form.first_name.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ profile_form.first_name.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Last Name -->
+                            <div>
+                                <label for="id_last_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Last Name
+                                </label>
+                                {{ profile_form.last_name }}
+                                {% if profile_form.last_name.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ profile_form.last_name.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Email (read-only) -->
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Email Address
+                                </label>
+                                <div class="relative">
+                                    <input type="email" value="{{ user.email }}" readonly class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500">
+                                    <div class="absolute right-4 top-1/2 transform -translate-y-1/2">
+                                        {% if user.email_verified %}
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <i class="fas fa-check-circle mr-1"></i> Verified
+                                        </span>
+                                        {% else %}
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                            <i class="fas fa-exclamation-circle mr-1"></i> Unverified
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Email cannot be changed. Contact support if needed.
+                                </p>
+                            </div>
+
+                            <!-- Phone Number -->
+                            <div class="md:col-span-2">
+                                <label for="id_phone_number" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Phone Number
+                                </label>
+                                {{ profile_form.phone_number }}
+                                {% if profile_form.phone_number.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ profile_form.phone_number.errors.0 }}</p>
+                                {% endif %}
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Optional. Used for account recovery.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end">
+                            <button type="submit" class="px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Change Password -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Change Password</h2>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="change_password" value="true">
+                        
+                        <div class="space-y-4 max-w-md">
+                            <!-- Current Password -->
+                            <div>
+                                <label for="id_current_password" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Current Password
+                                </label>
+                                {{ password_form.current_password }}
+                                {% if password_form.current_password.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ password_form.current_password.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- New Password -->
+                            <div>
+                                <label for="id_new_password" class="block text-sm font-medium text-gray-700 mb-2">
+                                    New Password
+                                </label>
+                                {{ password_form.new_password }}
+                                {% if password_form.new_password.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ password_form.new_password.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Confirm New Password -->
+                            <div>
+                                <label for="id_confirm_password" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Confirm New Password
+                                </label>
+                                {{ password_form.confirm_password }}
+                                {% if password_form.confirm_password.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ password_form.confirm_password.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Password Requirements -->
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Password Requirements:</p>
+                                <ul class="text-xs text-gray-600 space-y-1">
+                                    <li class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span>At least 8 characters long</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span>Contains uppercase and lowercase letters</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span>Includes at least one number</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span>Includes at least one special character</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="flex justify-end pt-4">
+                                <button type="submit" class="px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                                    Update Password
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Account Information -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Account Information</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">Account Created</h3>
+                            <p class="text-gray-900">{{ user.date_joined|date:"F j, Y, g:i a" }}</p>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">Last Login</h3>
+                            <p class="text-gray-900">
+                                {% if user.last_login %}
+                                {{ user.last_login|date:"F j, Y, g:i a" }}
+                                {% else %}
+                                Never logged in
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">Email Verified</h3>
+                            <p class="text-gray-900">
+                                {% if user.email_verified %}
+                                {{ user.email_verified_at|date:"F j, Y, g:i a" }}
+                                {% else %}
+                                Not verified
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">Login Count</h3>
+                            <p class="text-gray-900">{{ user.login_count }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Avatar preview
+    function previewAvatar(event) {
+        const input = event.target;
+        const preview = document.getElementById('avatarPreview');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                if (preview.tagName === 'IMG') {
+                    preview.src = e.target.result;
+                } else {
+                    // Replace div with img
+                    const img = document.createElement('img');
+                    img.id = 'avatarPreview';
+                    img.className = 'w-24 h-24 rounded-full border-2 border-primary-100 object-cover';
+                    img.src = e.target.result;
+                    preview.parentNode.replaceChild(img, preview);
+                }
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Password visibility toggle
+    function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        const type = field.type === 'password' ? 'text' : 'password';
+        field.type = type;
+    }
+
+    // Initialize password visibility toggles
+    document.querySelectorAll('[id^="id_"]').forEach(field => {
+        if (field.type === 'password') {
+            const toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600';
+            toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+            toggleBtn.onclick = () => togglePassword(field.id);
+            
+            field.parentNode.classList.add('relative');
+            field.parentNode.appendChild(toggleBtn);
+        }
+    });
+</script>
+{% endblock %}

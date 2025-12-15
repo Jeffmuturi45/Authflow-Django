@@ -1,0 +1,114 @@
+/* static/css/custom.css */
+
+/* Custom animations */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* Smooth transitions */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Focus styles */
+.focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+}
+
+/* OTP input special styling */
+.otp-input {
+    @apply w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-lg 
+           focus:border-primary-500 focus:ring-2 focus:ring-primary-200 
+           transition-all duration-200;
+}
+
+.otp-input:focus {
+    @apply border-primary-500 ring-2 ring-primary-200;
+}
+
+.otp-input.filled {
+    @apply border-green-500 bg-green-50;
+}
+
+.otp-input.error {
+    @apply border-red-500 bg-red-50 animate-shake;
+}
+
+/* Button loading state */
+.btn-loading {
+    @apply relative text-transparent transition-none;
+}
+
+.btn-loading::after {
+    content: '';
+    @apply absolute inset-0 flex items-center justify-center;
+    background-image: url("data:image/svg+xml,%3Csvg class='animate-spin h-5 w-5 text-white' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Ccircle class='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' stroke-width='4'%3E%3C/circle%3E%3Cpath class='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Form validation styles */
+.input-error {
+    @apply border-red-500 focus:border-red-500 focus:ring-red-200;
+}
+
+.input-success {
+    @apply border-green-500 focus:border-green-500 focus:ring-green-200;
+}
+
+/* Gradient text */
+.gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-purple-600;
+}
+
+/* Card hover effects */
+.hover-card {
+    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Glass morphism */
+.glass {
+    @apply backdrop-blur-sm bg-white/80 border border-white/20;
+}
+
+/* Loading skeleton */
+.skeleton {
+    @apply animate-pulse bg-gray-200 rounded;
+}
+
+/* Tooltip */
+.tooltip {
+    @apply invisible absolute;
+}
+
+.has-tooltip:hover .tooltip {
+    @apply visible z-50;
+}

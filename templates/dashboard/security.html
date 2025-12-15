@@ -1,0 +1,204 @@
+<!-- templates/dashboard/security.html - Fixed version -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Security - AuthFlow{% endblock %}
+
+{% block content %}
+<div class="flex min-h-screen bg-gray-50">
+    <!-- Sidebar -->
+    <div class="hidden md:flex md:w-64 md:flex-col">
+        <div class="flex flex-col flex-grow pt-5 overflow-y-auto bg-white border-r border-gray-200">
+            <!-- Logo -->
+            <div class="flex items-center flex-shrink-0 px-6 mb-8">
+                <div class="bg-primary-600 p-2 rounded-xl mr-3">
+                    <i class="fas fa-shield-alt text-white text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold text-gray-800">AuthFlow</span>
+            </div>
+
+            <!-- User Profile -->
+            <div class="px-6 mb-8">
+                <div class="flex items-center">
+                    {% if user.avatar %}
+                    <img class="w-12 h-12 rounded-full border-2 border-primary-100" src="{{ user.avatar.url }}" alt="{{ user.get_full_name }}">
+                    {% else %}
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary-500 to-purple-500 flex items-center justify-center text-white font-semibold">
+                        {{ user.email|first|upper }}
+                    </div>
+                    {% endif %}
+                    <div class="ml-3">
+                        <p class="text-sm font-semibold text-gray-800">{{ user.get_full_name|default:user.email }}</p>
+                        <p class="text-xs text-gray-500">
+                            {% if user.email_verified %}
+                            <span class="inline-flex items-center text-green-600">
+                                <i class="fas fa-check-circle mr-1"></i> Verified
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center text-yellow-600">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Unverified
+                            </span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex-grow px-4">
+                <nav class="space-y-1">
+                    <a href="{% url 'dashboard' %}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="{% url 'profile' %}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-user mr-3"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="{% url 'security' %}" class="flex items-center px-4 py-3 bg-primary-50 text-primary-600 border-l-4 border-primary-500 rounded-lg">
+                        <i class="fas fa-shield-alt mr-3"></i>
+                        <span>Security</span>
+                    </a>
+                    <a href="{% url 'settings' %}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-cog mr-3"></i>
+                        <span>Settings</span>
+                    </a>
+                    <div class="pt-6 mt-6 border-t border-gray-200">
+                        <a href="{% url 'logout' %}" class="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-sign-out-alt mr-3"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex flex-col flex-1 md:ml-64">
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="px-4 py-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-semibold text-gray-900">Security Settings</h1>
+                        <p class="text-sm text-gray-600 mt-1">Manage your account security</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 p-4 md:p-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Security Status -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Security Status</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="bg-green-100 p-2 rounded-lg mr-4">
+                                    <i class="fas fa-check text-green-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-gray-900">Email Verification</h3>
+                                    <p class="text-sm text-gray-600">Your email is verified</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Secure</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 bg-yellow-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="bg-yellow-100 p-2 rounded-lg mr-4">
+                                    <i class="fas fa-exclamation text-yellow-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-gray-900">Two-Factor Authentication</h3>
+                                    <p class="text-sm text-gray-600">Add an extra layer of security</p>
+                                </div>
+                            </div>
+                            <button class="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors duration-200">
+                                Enable
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="bg-blue-100 p-2 rounded-lg mr-4">
+                                    <i class="fas fa-clock text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-gray-900">Session Management</h3>
+                                    <p class="text-sm text-gray-600">Manage active login sessions</p>
+                                </div>
+                            </div>
+                            <a href="{% url 'session_management' %}" class="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                Manage
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Login History -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Recent Login Activity</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-900">Current Session</p>
+                                    <p class="text-sm text-gray-600">{{ request.META.REMOTE_ADDR }} • Just now</p>
+                                </div>
+                            </div>
+                            <span class="text-sm text-gray-500">Active</span>
+                        </div>
+                        
+                        <div class="text-center py-4">
+                            <p class="text-gray-500">More login history will appear here as you use the system</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Tips -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Security Tips</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <div>
+                                <h3 class="font-medium text-gray-900">Use a Strong Password</h3>
+                                <p class="text-sm text-gray-600 mt-1">Your password should be at least 8 characters with uppercase, lowercase, numbers, and special characters.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <div>
+                                <h3 class="font-medium text-gray-900">Enable 2FA</h3>
+                                <p class="text-sm text-gray-600 mt-1">Two-factor authentication adds an extra layer of security to your account.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <div>
+                                <h3 class="font-medium text-gray-900">Review Login Activity</h3>
+                                <p class="text-sm text-gray-600 mt-1">Regularly check your login history for any suspicious activity.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add any security page specific JavaScript here
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Security page loaded');
+    });
+</script>
+{% endblock %}
